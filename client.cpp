@@ -7,15 +7,11 @@
 #include <string.h>
 #include <fstream>
 #include <sstream>
-#include <stdlib.h>
 #include <iomanip>
-#include <string>
 #include <stdexcept>
 #include <cstdlib>
 #include <unistd.h>
-#include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -40,22 +36,13 @@ int main(int argc, char *argv[])
 {
 	//struct hostent *lh = gethostbyname("localhost");
 	string line;
-    int pid;
+        int pid;
 	struct message mess[3];
 	struct block b;
 	int p = 0;
 	while (cin >> mess[p].destination >> mess[p].value) {
 		p++;
 	}
-	/*
-	mess[0].destination = 3;
-	mess[0].value = 4;
-	mess[1].destination = 1;
-	mess[1].value = 5;
-	mess[2].destination = 2;
-	mess[2].value = 7;
-	*/
-	//client
 	int sockfd[3], portno, n;
 	struct sockaddr_in serv_addr;
 	struct hostent *server;
@@ -69,17 +56,12 @@ int main(int argc, char *argv[])
 	
 	int i;
 	for (i = 0; i < 3; i++) {
-		if ((pid = fork()) == 0) { // child process
-			
+		if ((pid = fork()) == 0) { 
+			// Currently in a child process
 			break;
 		}
-		//sleep(1);
 	}
-	//for (int r = 0; r < 3; r++) {
-		
-	//}
 	if (pid == 0) {
-		//under pid == 0 else wait
 		sockfd[i] = socket(AF_INET, SOCK_STREAM, 0);
 		
 		if (server == NULL) {
@@ -93,14 +75,13 @@ int main(int argc, char *argv[])
 			server->h_length);
 		serv_addr.sin_port = htons(portno);
 		if (connect(sockfd[i], (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
-			//cout << "connect works" << endl;
+			cout << "connection works" << endl;
 		}
 		cout << "Child " << i + 1 << ", sending value: " << mess[i].value << " to child process " << mess[i].destination << endl;
 		n = write(sockfd[i], &mess[i], sizeof(struct message));
 		if (n < 0) {
 			cout << "ERROR writing to socket";
 		}
-		//bzero(&b, 255);
 		n = read(sockfd[i], &b, sizeof(struct block));
 		int w[12];
 		for (int j = 0; j < 4; j++) {
