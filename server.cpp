@@ -5,18 +5,11 @@
 #include <sys/wait.h>
 #include <iostream>
 #include <algorithm>
-#include <string.h>
 #include <fstream>
 #include <sstream>
-#include <stdlib.h>
 #include <iomanip>
-#include <string>
 #include <stdexcept>
 #include <cstdlib>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -43,7 +36,6 @@ int main(int argc, char *argv[])
 	int walsh1[4] = { -1, 1, -1, 1 };
 	int walsh2[4] = { -1, -1, 1, 1 };
 	int walsh3[4] = { -1, 1, 1, -1 };
-	//mess[0].value = 77777;
 	mess[1].value = 66666;
 	mess[2].value = 88888;
 	
@@ -55,7 +47,7 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "ERROR, no port provided\n");
 		exit(1);
 	}
-	sockfd = socket(AF_INET, SOCK_STREAM, 0); //yes
+	sockfd = socket(AF_INET, SOCK_STREAM, 0); 
 	if (sockfd < 0)
 		cout<<"ERROR opening socket";
 	int i;
@@ -72,26 +64,23 @@ int main(int argc, char *argv[])
 		clilen = sizeof(cli_addr);
 		for (int j = 0; j < 3; j++) {
 			newsockfd[j] = accept(sockfd, (struct sockaddr *) &cli_addr, (socklen_t *)&clilen);
-			//cout << "before"<< newsockfd[j] << mess[j].value << endl;
 			n = read(newsockfd[j], &mess[j], sizeof(struct message));
 			cout << "Here is the message from child " << j + 1 << ": Value = " << mess[j].value << ", Destination = " << mess[j].destination << endl;
 			int binary[3][3];
-			//for (int i = 0; i < 3; i++) {
-				int x = 0;
-				while (mess[j].value > 0)
-				{
-					int temp = mess[j].value % 2;
-					if (temp == 0) {
-						binary[j][2-x] = -1;
-						
-					}
-					else {
-						binary[j][2-x] = 1;
-					}
-					mess[j].value /= 2;
-					x++;
+			int x = 0;
+			while (mess[j].value > 0)
+			{
+				int temp = mess[j].value % 2;
+				if (temp == 0) {
+					binary[j][2-x] = -1;
+
 				}
-			//}
+				else {
+					binary[j][2-x] = 1;
+				}
+				mess[j].value /= 2;
+				x++;
+			}
 			int em1[12];
 			int em2[12];
 			int em3[12];
@@ -122,7 +111,6 @@ int main(int argc, char *argv[])
 				for (int f = 0; f < 4; f++) {
 					b[0].walshcode[f] = w[c][f];
 				}
-				//memcpy(b[0].walshcode, , sizeof(walsh2));
 			}
 			else if (mess[c].destination == 2) {
 				for (int f = 0; f < 4; f++) {
@@ -144,23 +132,12 @@ int main(int argc, char *argv[])
 			cout << b[0].walshcode[a];
 		}
 		cout << endl;
-		
-		//memcpy(b[0].walshcode, mess[, sizeof(walsh2));
-		//memcpy(b[1].walshcode, walsh3, sizeof(walsh3));
-		//memcpy(b[2].walshcode, walsh1, sizeof(walsh1));
 		if (n < 0) {
 			cout<<"ERROR reading from socket";
 		}
-		//printf("Here is the message: %d\n", em);
 		for (int i = 0; i < 3; i++) {
-
-			//if (mess[i].destination == 1) {
-				//n = write(newsockfd[i], &b[(mess[i].destination) - 1], sizeof(struct block));
-			//}
-			//cout << b[i].ecodedm << " " << b[i].walshcode << endl;
 			n = write(newsockfd[i], &b[i], sizeof(struct block));
 			sleep(2);
-			//cout <<"Samne:"<< n << endl;
 		}
 		for (int i = 0; i < 3; i++)
 		{
