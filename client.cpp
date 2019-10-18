@@ -23,7 +23,7 @@ struct block {
 	int walshcode[4];
 };
 
-struct message{
+struct message {
 	int destination;
 	int value;
 };
@@ -35,36 +35,50 @@ void error(char *msg)
 
 int main(int argc, char *argv[])
 {
-	//struct hostent *lh = gethostbyname("localhost");
+	/*
+	 * Input file takes in a destination of the id of the process of which the current process wants to contact and the
+	 * data that the current process wants to send.
+	 * The Sender/Reciever program then creates 3 child process and each child process creates a socket.
+	 * The sockets send the request to the encoder program, receive the encoded signal & code,
+	 * and decode the message. 
+	 */
+	 //struct hostent *lh = gethostbyname("localhost");
 	string line;
-        int pid;
+	int pid; 
+	/*
+	 * pid = process id
+	 */
 	struct message mess[3];
 	struct block b;
 	int p = 0;
+
 	while (cin >> mess[p].destination >> mess[p].value) {
 		p++;
 	}
+	/*
+	 * standard input obtains values from the input file
+	 */
 	int sockfd[3], portno, n;
 	struct sockaddr_in serv_addr;
 	struct hostent *server;
-	//int sockets[3];
 	if (argc < 3) {
 		fprintf(stderr, "usage %s hostname port\n", argv[0]);
 		exit(0);
 	}
-    server = gethostbyname(argv[1]);
+	server = gethostbyname(argv[1]);
 	portno = atoi(argv[2]);
-	
+
 	int i;
 	for (i = 0; i < 3; i++) {
-		if ((pid = fork()) == 0) { 
+		if ((pid = fork()) == 0) {
+			// Child process is created at the same time the if statment checks if its currently in a child process
 			// Currently in a child process
 			break;
 		}
 	}
 	if (pid == 0) {
 		sockfd[i] = socket(AF_INET, SOCK_STREAM, 0);
-		
+
 		if (server == NULL) {
 			fprintf(stderr, "ERROR, no such host\n");
 			exit(0);
@@ -87,12 +101,12 @@ int main(int argc, char *argv[])
 		int w[12];
 		for (int j = 0; j < 4; j++) {
 			w[j] = b.walshcode[j];
-			w[j+4] = b.walshcode[j];
-			w[j+8] = b.walshcode[j];
+			w[j + 4] = b.walshcode[j];
+			w[j + 8] = b.walshcode[j];
 		}
-		
+
 		int DM1[12];
-		
+
 		int d1 = 0, d2 = 0, d3 = 0;
 		for (int j = 0; j < 12; j++) {
 			DM1[j] = w[j] * b.ecodedm[j];
@@ -115,18 +129,18 @@ int main(int argc, char *argv[])
 			d3 = 0;
 		}
 		int d = (d1 * 4) + (d2 * 2) + (d3 * 1);
-		cout << "Child " << i+1 << endl;
+		cout << "Child " << i + 1 << endl;
 		cout << "Signal:";
 		for (int g = 0; g < 12; g++) {
 			cout << b.ecodedm[g];
 		}
-		cout << endl<<"Code: ";
+		cout << endl << "Code: ";
 		for (int e = 0; e < 4; e++) {
 			cout << b.walshcode[e];
 		}
 		cout << endl;
 		cout << "Received value = " << d << endl << endl;
-		
+
 	}
 	else {
 		for (int k = 0; k < 3; k++) {
@@ -135,3 +149,4 @@ int main(int argc, char *argv[])
 	}
 	return 0;
 }
+
