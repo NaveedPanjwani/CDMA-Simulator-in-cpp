@@ -30,6 +30,7 @@ void error(char *msg)
 }
 int main(int argc, char *argv[])
 {
+	//Used the mathematics behind walsh codes in order to implement the CDMA system
 	struct block b[3];
 	struct message mess[3];
 	int w[3][4] = { -1, 1, -1, 1,-1, -1, 1, 1,-1, 1, 1, -1 };
@@ -63,8 +64,10 @@ int main(int argc, char *argv[])
 		listen(sockfd, 5);
 		clilen = sizeof(cli_addr);
 		for (int j = 0; j < 3; j++) {
+			//Creates a new socket that fully establishes a connection between client and server
 			newsockfd[j] = accept(sockfd, (struct sockaddr *) &cli_addr, (socklen_t *)&clilen);
-			n = read(newsockfd[j], &mess[j], sizeof(struct message));
+			//the message on the socket is being read
+			n = read(newsockfd[j], &messsj], sizeof(struct message));
 			cout << "Here is the message from child " << j + 1 << ": Value = " << mess[j].value << ", Destination = " << mess[j].destination << endl;
 			int binary[3][3];
 			int x = 0;
