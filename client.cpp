@@ -72,6 +72,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	if (pid == 0) {
+		// created a socket while specifying the communication domain, communication type, and protocol value as inputs
 		sockfd[i] = socket(AF_INET, SOCK_STREAM, 0);
 
 		if (server == NULL) {
@@ -84,10 +85,12 @@ int main(int argc, char *argv[])
 			(char *)&serv_addr.sin_addr.s_addr,
 			server->h_length);
 		serv_addr.sin_port = htons(portno);
+		//Here we are connecting the specific socket element to a specific address
 		if (connect(sockfd[i], (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
 			cout << "connection works" << endl;
 		}
 		cout << "Child " << i + 1 << ", sending value: " << mess[i].value << " to child process " << mess[i].destination << endl;
+		//here we are writing our message to the specific socket
 		n = write(sockfd[i], &mess[i], sizeof(struct message));
 		if (n < 0) {
 			cout << "ERROR writing to socket";
