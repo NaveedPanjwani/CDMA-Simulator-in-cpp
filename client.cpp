@@ -44,18 +44,15 @@ int main(int argc, char *argv[])
 	 */
 	 //struct hostent *lh = gethostbyname("localhost");
 	string line;
-	int pid; 
 	// pid = process id
+	int pid; 
 	struct message mess[3];
 	struct block b;
 	int p = 0;
-
+	//standard input obtains values from the input file
 	while (cin >> mess[p].destination >> mess[p].value) {
 		p++;
 	}
-	/*
-	standard input obtains values from the input file
-	*/
 	int sockfd[3], portno, n;
 	struct sockaddr_in serv_addr;
 	struct hostent *server;
