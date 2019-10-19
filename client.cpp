@@ -45,9 +45,7 @@ int main(int argc, char *argv[])
 	 //struct hostent *lh = gethostbyname("localhost");
 	string line;
 	int pid; 
-	/*
-	 * pid = process id
-	 */
+	// pid = process id
 	struct message mess[3];
 	struct block b;
 	int p = 0;
@@ -56,8 +54,8 @@ int main(int argc, char *argv[])
 		p++;
 	}
 	/*
-	 * standard input obtains values from the input file
-	 */
+	standard input obtains values from the input file
+	*/
 	int sockfd[3], portno, n;
 	struct sockaddr_in serv_addr;
 	struct hostent *server;
@@ -149,4 +147,3 @@ int main(int argc, char *argv[])
 	}
 	return 0;
 }
-
